@@ -1,5 +1,6 @@
-import { Container } from "@mui/material";
+import Container from "@mui/material/Container";
 import React from "react";
+import Footer from "./Footer";
 
 import Header from "./Header";
 
@@ -12,6 +13,7 @@ function Layout({ children }: MyProps) {
     <Container>
       <Header />
       {children}
+      <Footer />
     </Container>
   );
 }

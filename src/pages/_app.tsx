@@ -6,7 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { withTRPC } from "@trpc/next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import React, { useState } from "react";
+import React from "react";
 import superjson from "superjson";
 
 import Layout from "../components/Layout";
