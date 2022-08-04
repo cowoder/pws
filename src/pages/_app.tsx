@@ -2,13 +2,16 @@
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { withTRPC } from "@trpc/next";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import React, { useState } from "react";
 import superjson from "superjson";
 
+import Layout from "../components/Layout";
 import createEmotionCache from "../createEmotionCache";
-import theme from "../theme";
+import createMyTheme from "../theme";
 
 import type { AppRouter } from "../server/router";
 
@@ -19,8 +22,18 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
+export const ColorModeContext = React.createContext({
+  toggleColorMode: () => {},
+});
+
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = React.useMemo(
+    () => createMyTheme(prefersDarkMode),
+    [prefersDarkMode],
+  );
 
   return (
     <CacheProvider value={emotionCache}>
@@ -30,7 +43,9 @@ const MyApp = (props: MyAppProps) => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </ThemeProvider>
     </CacheProvider>
   );
