@@ -8,11 +8,6 @@ import { trpc } from "../utils/trpc";
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {
-  const { data, isLoading } = trpc.useQuery([
-    "example.hello",
-    { text: "from tRPC" },
-  ]);
-
   return (
     <Container>
       <Box
