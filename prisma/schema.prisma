@@ -15,7 +15,6 @@ model PasswordToShare {
   createdAt DateTime @default(now())
 
   destroyAt        DateTime
-  deleteAfterOpens Int      @default(1)
   openWithPassword String?
 
   sharedPassword String

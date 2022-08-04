@@ -8,7 +8,7 @@ function Header() {
     <AppBar position="static" sx={{ my: 4 }}>
       <Toolbar>
         <Typography variant="h5" component="h1" color={"secondary"}>
-          Password Share
+          🔒 Password Share
         </Typography>
       </Toolbar>
     </AppBar>

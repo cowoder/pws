@@ -6,7 +6,6 @@ import { prisma } from "../db/client";
 export const passwordRouter = createRouter().mutation("post", {
   input: z.object({
     destroyAt: z.date(),
-    deleteAfterOpens: z.number(),
     openWithPassword: z.string().nullish(),
     sharedPassword: z.string(),
   }),
