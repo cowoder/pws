@@ -12,7 +12,7 @@ function Layout({ children }: MyProps) {
   return (
     <Container>
       <Header />
-      {children}
+      <Container sx={{ minHeight: "75vh" }}>{children}</Container>
       <Footer />
     </Container>
   );

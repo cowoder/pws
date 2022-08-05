@@ -6,8 +6,6 @@ function Footer() {
   return (
     <Container
       sx={{
-        position: "fixed",
-        bottom: 0,
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
