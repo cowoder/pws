@@ -52,13 +52,15 @@ const lifetimes = [
   },
 ];
 
+const initialValues = {
+  showPassword: false,
+  lifetime: 600,
+  openWithPassword: "",
+  sharedPassword: "",
+};
+
 function ShareForm() {
-  const [values, setValues] = useState<State>({
-    showPassword: false,
-    lifetime: 600,
-    openWithPassword: "",
-    sharedPassword: "",
-  });
+  const [values, setValues] = useState<State>(initialValues);
 
   const sharePassword = trpc.useMutation(["password.post"]);
 
@@ -78,6 +80,7 @@ function ShareForm() {
   const onSubmit = () => {
     const { lifetime, openWithPassword, sharedPassword } = values;
     sharePassword.mutate({ lifetime, openWithPassword, sharedPassword });
+    setValues(initialValues);
   };
 
   return (
