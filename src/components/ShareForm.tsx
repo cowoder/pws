@@ -1,11 +1,15 @@
-import { FormControl } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
+import { GetServerSideProps } from "next/types";
 import { useState } from "react";
 
 import { trpc } from "../utils/trpc";
@@ -55,7 +59,7 @@ const initialValues = {
   sharedPassword: "",
 };
 
-function ShareForm() {
+function ShareForm({ host }: Props) {
   const [values, setValues] = useState<State>(initialValues);
 
   const sharePassword = trpc.useMutation(["password.post"]);
@@ -75,7 +79,11 @@ function ShareForm() {
 
   const onSubmit = () => {
     const { lifetime, openWithPassword, sharedPassword } = values;
-    sharePassword.mutate({ lifetime, openWithPassword, sharedPassword });
+    sharePassword.mutate({
+      lifetime,
+      openWithPassword,
+      sharedPassword,
+    });
     setValues(initialValues);
   };
 
@@ -137,8 +145,38 @@ function ShareForm() {
       >
         Share
       </Button>
+      {sharePassword.isLoading ? (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      ) : null}
+      {sharePassword.error ? (
+        <Box sx={{ width: "100%" }}>
+          <Alert severity="error">{sharePassword.error.message}</Alert>
+        </Box>
+      ) : null}
+      {sharePassword.data ? (
+        <FormControl fullWidth margin="normal">
+          <TextField
+            value={`${host ? host + "/share/" : ""}${sharePassword.data.data}`}
+            fullWidth
+            type="text"
+            label="Link to share"
+            id="link-to-share"
+            aria-readonly
+          />
+        </FormControl>
+      ) : null}
     </Container>
   );
 }
+
+type Props = { host: string | null };
+
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
+  return { props: { host: context.req.headers.host || null } };
+};
 
 export default ShareForm;

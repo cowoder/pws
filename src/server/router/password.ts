@@ -27,7 +27,7 @@ export const passwordRouter = createRouter()
       const storeInDB = await prisma.passwordToShare.create({
         data: { id, openWithPassword: hash, sharedPassword, destroyAt },
       });
-      return { success: true, data: storeInDB };
+      return { success: true, data: storeInDB.id };
     },
   })
   .query("get", {
@@ -51,8 +51,6 @@ export const passwordRouter = createRouter()
         input.password,
         openWithPassword,
       );
-
-      console.log(input.password, openWithPassword, validPassword);
 
       if (!validPassword)
         throw new trpc.TRPCError({
