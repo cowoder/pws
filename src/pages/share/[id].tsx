@@ -1,15 +1,50 @@
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
+import ReceiveForm from "../../components/ReceiveForm";
 import { prisma } from "../../server/db/client";
 
 import type { GetServerSideProps } from "next";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
 
 const Shared: React.FC<{
+  shareId?: string;
   sharedPassword?: string;
   requirePassword: boolean;
-}> = ({ sharedPassword, requirePassword }) => {
+}> = ({ shareId, sharedPassword, requirePassword }) => {
   return (
-    <Container>{requirePassword ? "need password" : sharedPassword}</Container>
+    <Container>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {requirePassword ? (
+          <>
+            <Typography variant="h6" component="h2" gutterBottom>
+              Going to need a password to access that one
+            </Typography>
+            <ReceiveForm sharedId={shareId} />
+          </>
+        ) : (
+          <FormControl fullWidth margin="normal">
+            <TextField
+              value={sharedPassword}
+              fullWidth
+              type="text"
+              label="Shared password"
+              id="shared-password"
+              aria-readonly
+            />
+          </FormControl>
+        )}
+      </Box>
+    </Container>
   );
 };
 
@@ -22,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   });
   if (!storedPassword) return { notFound: true };
   const { sharedPassword, openWithPassword } = { ...storedPassword };
-  if (openWithPassword) return { props: { requirePassword: true } };
+  if (openWithPassword) return { props: { shareId, requirePassword: true } };
   else return { props: { sharedPassword, requirePassword: false } };
 };
 

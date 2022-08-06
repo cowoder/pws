@@ -13,15 +13,16 @@ interface State {
   showPassword: boolean;
 }
 
-const initialValues = {
-  id: "",
-  password: "",
-  showPassword: false,
-};
-
-function ReceiveForm() {
-  const [values, setValues] = useState<State>(initialValues);
-  const [submitValues, setSubmitValues] = useState({ id: "", password: "" });
+function ReceiveForm({ sharedId = "" }) {
+  const [values, setValues] = useState<State>({
+    id: sharedId,
+    password: "",
+    showPassword: false,
+  });
+  const [submitValues, setSubmitValues] = useState({
+    id: "",
+    password: "",
+  });
   const [showResponse, setShowResponse] = useState(false);
 
   const handleChange =
