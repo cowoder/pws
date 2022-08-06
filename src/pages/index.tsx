@@ -3,8 +3,6 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-import { trpc } from "../utils/trpc";
-
 import type { NextPage } from "next";
 import { useState } from "react";
 import ShareForm from "../components/ShareForm";

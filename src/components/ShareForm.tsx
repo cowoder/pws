@@ -9,7 +9,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import { GetServerSideProps } from "next/types";
 import { useState } from "react";
 
 import { trpc } from "../utils/trpc";
@@ -59,7 +58,7 @@ const initialValues = {
   sharedPassword: "",
 };
 
-function ShareForm({ host }: Props) {
+function ShareForm() {
   const [values, setValues] = useState<State>(initialValues);
 
   const sharePassword = trpc.useMutation(["password.post"]);
@@ -158,7 +157,7 @@ function ShareForm({ host }: Props) {
       {sharePassword.data ? (
         <FormControl fullWidth margin="normal">
           <TextField
-            value={`${host ? host + "/share/" : ""}${sharePassword.data.data}`}
+            value={`${process.env.VERCEL_URL}/share/${sharePassword.data.data}`}
             fullWidth
             type="text"
             label="Link to share"
@@ -170,13 +169,5 @@ function ShareForm({ host }: Props) {
     </Container>
   );
 }
-
-type Props = { host: string | null };
-
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context,
-) => {
-  return { props: { host: context.req.headers.host || null } };
-};
 
 export default ShareForm;
