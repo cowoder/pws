@@ -1,6 +1,12 @@
-import { FormControl } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
@@ -38,6 +44,12 @@ function ReceiveForm({ sharedId = "" }) {
     });
   };
 
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+  };
+
   const onSubmit = () => {
     const { id, password } = values;
     if (!id) return;
@@ -67,13 +79,28 @@ function ReceiveForm({ sharedId = "" }) {
         />
       </FormControl>
       <FormControl fullWidth margin="normal">
-        <TextField
+        <InputLabel htmlFor="password-to-access-shared-password">
+          Password to access shared password
+        </InputLabel>
+        <OutlinedInput
           onChange={handleChange("password")}
           value={values.password}
           fullWidth
-          type="password"
+          type={values.showPassword ? "text" : "password"}
           label="Password to access shared password"
           id="password-to-access-shared-password"
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
       </FormControl>
       <Button

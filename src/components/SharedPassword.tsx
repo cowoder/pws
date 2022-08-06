@@ -35,6 +35,9 @@ function SharedPassword({
     return (
       <FormControl fullWidth margin="normal">
         <TextField
+          onFocus={(event) => {
+            event.target.select();
+          }}
           value={data}
           fullWidth
           type="text"

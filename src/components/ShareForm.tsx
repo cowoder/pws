@@ -1,11 +1,16 @@
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import Paper from "@mui/material/Paper";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
@@ -76,6 +81,12 @@ function ShareForm() {
     });
   };
 
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+  };
+
   const onSubmit = () => {
     const { lifetime, openWithPassword, sharedPassword } = values;
     sharePassword.mutate({
@@ -97,14 +108,27 @@ function ShareForm() {
       }}
     >
       <FormControl fullWidth margin="normal">
-        <TextField
+        <InputLabel htmlFor="password-to-share">Password to share</InputLabel>
+        <OutlinedInput
           onChange={handleChange("sharedPassword")}
           value={values.sharedPassword}
           required
           fullWidth
-          type="password"
+          type={values.showPassword ? "text" : "password"}
           label="Password to share"
           id="password-to-share"
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
       </FormControl>
       <FormControl fullWidth margin="normal">
@@ -126,13 +150,26 @@ function ShareForm() {
         </Select>
       </FormControl>
       <FormControl fullWidth margin="normal">
-        <TextField
+        <InputLabel htmlFor="password-to-access">Password to access</InputLabel>
+        <OutlinedInput
           onChange={handleChange("openWithPassword")}
           value={values.openWithPassword}
           fullWidth
-          type="password"
+          type={values.showPassword ? "text" : "password"}
           label="Password to access"
           id="password-to-access"
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
       </FormControl>
       <Button
@@ -157,6 +194,9 @@ function ShareForm() {
       {sharePassword.data ? (
         <FormControl fullWidth margin="normal">
           <TextField
+            onFocus={(event) => {
+              event.target.select();
+            }}
             value={`${process.env.NEXT_PUBLIC_URL}/share/${sharePassword.data.data}`}
             fullWidth
             type="text"

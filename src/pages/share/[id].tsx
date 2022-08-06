@@ -34,6 +34,9 @@ const Shared: React.FC<{
         ) : (
           <FormControl fullWidth margin="normal">
             <TextField
+              onFocus={(event) => {
+                event.target.select();
+              }}
               value={sharedPassword}
               fullWidth
               type="text"
