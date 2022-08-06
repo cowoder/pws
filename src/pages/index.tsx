@@ -8,9 +8,11 @@ import { trpc } from "../utils/trpc";
 import type { NextPage } from "next";
 import { useState } from "react";
 import ShareForm from "../components/ShareForm";
+import ReceiveForm from "../components/ReceiveForm";
 
 const Home: NextPage = () => {
-  const [showForm, setShowForm] = useState(false);
+  const [showShareForm, setShowShareForm] = useState(false);
+  const [showReceiveForm, setShowReceiveForm] = useState(false);
 
   return (
     <Container>
@@ -26,7 +28,7 @@ const Home: NextPage = () => {
           Would you like to share or receive a password?
         </Typography>
         <Button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => setShowShareForm(!showShareForm)}
           fullWidth
           variant="outlined"
           size="large"
@@ -34,13 +36,17 @@ const Home: NextPage = () => {
         >
           Share password
         </Button>
-        {showForm ? (
-          <ShareForm />
-        ) : (
-          <Button fullWidth variant="outlined" size="large" sx={{ my: 2 }}>
-            Receive password
-          </Button>
-        )}
+        {showShareForm ? <ShareForm /> : null}
+        <Button
+          onClick={() => setShowReceiveForm(!showReceiveForm)}
+          fullWidth
+          variant="outlined"
+          size="large"
+          sx={{ my: 2 }}
+        >
+          Receive password
+        </Button>
+        {showReceiveForm ? <ReceiveForm /> : null}
       </Box>
     </Container>
   );

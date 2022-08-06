@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import bcrypt from "bcryptjs";
+import * as trpc from "@trpc/server";
 
 import { prisma } from "../db/client";
 import { createRouter } from "./context";
@@ -17,18 +19,46 @@ export const passwordRouter = createRouter()
       const destroyAt = new Date(now.setTime(now.getTime() + lifetime * 1000));
       const id = nanoid(36);
 
+      const salt = await bcrypt.genSalt(10);
+      const hash = openWithPassword
+        ? await bcrypt.hash(openWithPassword, salt)
+        : undefined;
+
       const storeInDB = await prisma.passwordToShare.create({
-        data: { id, openWithPassword, sharedPassword, destroyAt },
+        data: { id, openWithPassword: hash, sharedPassword, destroyAt },
       });
       return { success: true, data: storeInDB };
     },
   })
   .query("get", {
-    input: z.string(),
+    input: z.object({ id: z.string(), password: z.string() }),
     async resolve({ input }) {
       const storedPassword = await prisma.passwordToShare.findFirst({
-        where: { id: input },
+        where: { id: input.id },
+        select: { sharedPassword: true, openWithPassword: true },
       });
-      return storedPassword;
+
+      if (!storedPassword)
+        throw new trpc.TRPCError({
+          code: "NOT_FOUND",
+          message: "Could not find the requested id",
+        });
+
+      const { sharedPassword, openWithPassword } = { ...storedPassword };
+      if (!openWithPassword) return sharedPassword;
+
+      const validPassword = await bcrypt.compare(
+        input.password,
+        openWithPassword,
+      );
+
+      console.log(input.password, openWithPassword, validPassword);
+
+      if (!validPassword)
+        throw new trpc.TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid password",
+        });
+      else return sharedPassword;
     },
   });

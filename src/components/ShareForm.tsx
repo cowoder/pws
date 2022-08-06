@@ -19,20 +19,16 @@ interface State {
 
 const lifetimes = [
   {
-    value: 10 * 60,
-    label: "10 minutes",
-  },
-  {
-    value: 30 * 60,
-    label: "30 minutes",
+    value: 15 * 60,
+    label: "15 minutes",
   },
   {
     value: 60 * 60,
     label: "1 hour",
   },
   {
-    value: 6 * 60 * 60,
-    label: "6 hours",
+    value: 4 * 60 * 60,
+    label: "4 hours",
   },
   {
     value: 12 * 60 * 60,
@@ -54,7 +50,7 @@ const lifetimes = [
 
 const initialValues = {
   showPassword: false,
-  lifetime: 600,
+  lifetime: 15 * 60,
   openWithPassword: "",
   sharedPassword: "",
 };
