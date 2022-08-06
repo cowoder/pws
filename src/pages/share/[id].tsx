@@ -8,6 +8,7 @@ import { prisma } from "../../server/db/client";
 import type { GetServerSideProps } from "next";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
+import { deletePassword } from "../../utils/deletePassword";
 
 const Shared: React.FC<{
   shareId?: string;
@@ -61,7 +62,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (!storedPassword) return { notFound: true };
   const { sharedPassword, openWithPassword } = { ...storedPassword };
   if (openWithPassword) return { props: { shareId, requirePassword: true } };
-  else return { props: { sharedPassword, requirePassword: false } };
+  else {
+    deletePassword(shareId);
+    return { props: { sharedPassword, requirePassword: false } };
+  }
 };
 
 export default Shared;

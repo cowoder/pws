@@ -5,6 +5,7 @@ import * as trpc from "@trpc/server";
 
 import { prisma } from "../db/client";
 import { createRouter } from "./context";
+import { deletePassword } from "../../utils/deletePassword";
 
 export const passwordRouter = createRouter()
   .mutation("post", {
@@ -45,7 +46,10 @@ export const passwordRouter = createRouter()
         });
 
       const { sharedPassword, openWithPassword } = { ...storedPassword };
-      if (!openWithPassword) return sharedPassword;
+      if (!openWithPassword) {
+        deletePassword(input.id);
+        return sharedPassword;
+      }
 
       const validPassword = await bcrypt.compare(
         input.password,
@@ -57,6 +61,9 @@ export const passwordRouter = createRouter()
           code: "UNAUTHORIZED",
           message: "Invalid password",
         });
-      else return sharedPassword;
+      else {
+        deletePassword(input.id);
+        return sharedPassword;
+      }
     },
   });
