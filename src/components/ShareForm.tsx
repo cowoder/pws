@@ -157,7 +157,7 @@ function ShareForm() {
       {sharePassword.data ? (
         <FormControl fullWidth margin="normal">
           <TextField
-            value={`${process.env.VERCEL_URL}/share/${sharePassword.data.data}`}
+            value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/share/${sharePassword.data.data}`}
             fullWidth
             type="text"
             label="Link to share"
