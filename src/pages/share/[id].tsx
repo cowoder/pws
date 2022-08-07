@@ -9,6 +9,7 @@ import type { GetServerSideProps } from "next";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import { deletePassword } from "../../utils/deletePassword";
+import { decryptPassword } from "../../server/router/password";
 
 const Shared: React.FC<{
   shareId?: string;
@@ -64,7 +65,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (openWithPassword) return { props: { shareId, requirePassword: true } };
   else {
     deletePassword(shareId);
-    return { props: { sharedPassword, requirePassword: false } };
+    const decryptedPassword = decryptPassword(sharedPassword);
+    return {
+      props: { sharedPassword: decryptedPassword, requirePassword: false },
+    };
   }
 };
 

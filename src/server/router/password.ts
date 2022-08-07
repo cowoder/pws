@@ -2,10 +2,20 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs";
 import * as trpc from "@trpc/server";
+import CryptoJS from "crypto-js";
 
 import { prisma } from "../db/client";
 import { createRouter } from "./context";
 import { deletePassword } from "../../utils/deletePassword";
+
+export const decryptPassword = (encryptedPassword: string) => {
+  const bytes = CryptoJS.AES.decrypt(
+    encryptedPassword,
+    process.env.SECRET_KEY!,
+  );
+  const password = bytes.toString(CryptoJS.enc.Utf8);
+  return password;
+};
 
 export const passwordRouter = createRouter()
   .mutation("post", {
@@ -20,13 +30,23 @@ export const passwordRouter = createRouter()
       const destroyAt = new Date(now.setTime(now.getTime() + lifetime * 1000));
       const id = nanoid(36);
 
+      const encryptedShared = CryptoJS.AES.encrypt(
+        sharedPassword,
+        process.env.SECRET_KEY!,
+      ).toString();
+
       const salt = await bcrypt.genSalt(10);
       const hash = openWithPassword
         ? await bcrypt.hash(openWithPassword, salt)
         : undefined;
 
       const storeInDB = await prisma.passwordToShare.create({
-        data: { id, openWithPassword: hash, sharedPassword, destroyAt },
+        data: {
+          id,
+          openWithPassword: hash,
+          sharedPassword: encryptedShared,
+          destroyAt,
+        },
       });
       return { success: true, data: storeInDB.id };
     },
@@ -48,7 +68,7 @@ export const passwordRouter = createRouter()
       const { sharedPassword, openWithPassword } = { ...storedPassword };
       if (!openWithPassword) {
         deletePassword(input.id);
-        return sharedPassword;
+        return decryptPassword(sharedPassword);
       }
 
       const validPassword = await bcrypt.compare(
@@ -63,7 +83,7 @@ export const passwordRouter = createRouter()
         });
       else {
         deletePassword(input.id);
-        return sharedPassword;
+        return decryptPassword(sharedPassword);
       }
     },
   });

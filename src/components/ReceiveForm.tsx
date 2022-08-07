@@ -30,6 +30,7 @@ function ReceiveForm({ sharedId = "" }) {
     password: "",
   });
   const [showResponse, setShowResponse] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const handleChange =
     (prop: keyof State) =>
@@ -51,10 +52,12 @@ function ReceiveForm({ sharedId = "" }) {
   };
 
   const onSubmit = () => {
+    setDisabled(true);
     const { id, password } = values;
     if (!id) return;
     setSubmitValues({ id, password });
     setShowResponse(true);
+    setDisabled(false);
   };
 
   return (
@@ -105,6 +108,7 @@ function ReceiveForm({ sharedId = "" }) {
       </FormControl>
       <Button
         onClick={onSubmit}
+        disabled={disabled}
         type="submit"
         fullWidth
         variant="contained"

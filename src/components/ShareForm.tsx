@@ -65,6 +65,7 @@ const initialValues = {
 
 function ShareForm() {
   const [values, setValues] = useState<State>(initialValues);
+  const [disabled, setDisabled] = useState(false);
 
   const sharePassword = trpc.useMutation(["password.post"]);
 
@@ -88,6 +89,7 @@ function ShareForm() {
   };
 
   const onSubmit = () => {
+    setDisabled(true);
     const { lifetime, openWithPassword, sharedPassword } = values;
     sharePassword.mutate({
       lifetime,
@@ -95,6 +97,7 @@ function ShareForm() {
       sharedPassword,
     });
     setValues(initialValues);
+    setDisabled(false);
   };
 
   return (
@@ -174,6 +177,7 @@ function ShareForm() {
       </FormControl>
       <Button
         onClick={onSubmit}
+        disabled={disabled}
         type="submit"
         fullWidth
         variant="contained"
