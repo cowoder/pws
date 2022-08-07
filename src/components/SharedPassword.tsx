@@ -33,19 +33,24 @@ function SharedPassword({
     );
   else
     return (
-      <FormControl fullWidth margin="normal">
-        <TextField
-          onFocus={(event) => {
-            event.target.select();
-          }}
-          value={data}
-          fullWidth
-          type="text"
-          label="Shared password"
-          id="shared-password"
-          aria-readonly
-        />
-      </FormControl>
+      <>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            onFocus={(event) => {
+              event.target.select();
+            }}
+            value={data}
+            fullWidth
+            type="text"
+            label="Shared password"
+            id="shared-password"
+            aria-readonly
+          />
+        </FormControl>
+        <Box sx={{ width: "100%" }}>
+          <Alert severity="warning">Will only show once</Alert>
+        </Box>
+      </>
     );
 }
 
