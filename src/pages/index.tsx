@@ -2,11 +2,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
+
+import ReceiveForm from "../components/ReceiveForm";
+import ShareForm from "../components/ShareForm";
 
 import type { NextPage } from "next";
-import { useState } from "react";
-import ShareForm from "../components/ShareForm";
-import ReceiveForm from "../components/ReceiveForm";
 
 const Home: NextPage = () => {
   const [showShareForm, setShowShareForm] = useState(false);

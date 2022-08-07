@@ -1,15 +1,15 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import ReceiveForm from "../../components/ReceiveForm";
 import { prisma } from "../../server/db/client";
+import { decryptPassword } from "../../server/router/password";
+import { deletePassword } from "../../utils/deletePassword";
 
 import type { GetServerSideProps } from "next";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import { deletePassword } from "../../utils/deletePassword";
-import { decryptPassword } from "../../server/router/password";
 
 const Shared: React.FC<{
   shareId?: string;
