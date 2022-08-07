@@ -52,12 +52,14 @@ function ReceiveForm({ sharedId = "" }) {
   };
 
   const onSubmit = () => {
-    setDisabled(true);
     const { id, password } = values;
     if (!id) return;
     setSubmitValues({ id, password });
     setShowResponse(true);
-    setDisabled(false);
+  };
+
+  const callback = (isLoading: boolean) => {
+    setDisabled(isLoading);
   };
 
   return (
@@ -116,7 +118,9 @@ function ReceiveForm({ sharedId = "" }) {
       >
         Receive
       </Button>
-      {showResponse ? <SharedPassword values={submitValues} /> : null}
+      {showResponse ? (
+        <SharedPassword values={submitValues} callback={callback} />
+      ) : null}
     </Container>
   );
 }

@@ -8,8 +8,10 @@ import { trpc } from "../utils/trpc";
 
 function SharedPassword({
   values: { id, password },
+  callback,
 }: {
   values: { id: string; password: string };
+  callback: (isLoading: boolean) => void;
 }) {
   const { data, isLoading, error } = trpc.useQuery(
     ["password.get", { id, password }],
@@ -19,6 +21,9 @@ function SharedPassword({
       refetchOnWindowFocus: false,
     },
   );
+
+  callback(isLoading);
+
   if (isLoading)
     return (
       <Box sx={{ width: "100%" }}>
