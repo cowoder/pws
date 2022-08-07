@@ -64,7 +64,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { sharedPassword, openWithPassword } = { ...storedPassword };
   if (openWithPassword) return { props: { shareId, requirePassword: true } };
   else {
-    deletePassword(shareId);
+    await deletePassword(shareId);
     const decryptedPassword = decryptPassword(sharedPassword);
     return {
       props: { sharedPassword: decryptedPassword, requirePassword: false },

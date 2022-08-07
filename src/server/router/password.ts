@@ -67,7 +67,7 @@ export const passwordRouter = createRouter()
 
       const { sharedPassword, openWithPassword } = { ...storedPassword };
       if (!openWithPassword) {
-        deletePassword(input.id);
+        await deletePassword(input.id);
         return decryptPassword(sharedPassword);
       }
 
@@ -82,7 +82,7 @@ export const passwordRouter = createRouter()
           message: "Invalid password",
         });
       else {
-        deletePassword(input.id);
+        await deletePassword(input.id);
         return decryptPassword(sharedPassword);
       }
     },
