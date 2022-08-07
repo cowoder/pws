@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 
 const About: NextPage = () => {
   return (
@@ -19,15 +20,27 @@ const About: NextPage = () => {
         <Typography variant="h6" component="h2" gutterBottom>
           Password Sharing App
         </Typography>
-        <NextLink href="https://github.com/cowoder/pws" target="_blank">
-          <Typography color="primary" sx={{ cursor: "pointer", my: 2 }}>
+        <NextLink href="https://github.com/cowoder/pws" passHref>
+          <Link
+            target="_blank"
+            rel="noopener"
+            color="primary"
+            underline="none"
+            sx={{ cursor: "pointer", my: 2 }}
+          >
             source code
-          </Typography>
+          </Link>
         </NextLink>
-        <NextLink href="https://cowoder.com/" target="_blank">
-          <Typography color="secondary" sx={{ cursor: "pointer" }}>
+        <NextLink href="https://cowoder.com/" passHref>
+          <Link
+            target="_blank"
+            rel="noopener"
+            color="secondary"
+            underline="none"
+            sx={{ cursor: "pointer" }}
+          >
             cowoder website
-          </Typography>
+          </Link>
         </NextLink>
       </Box>
     </Container>
