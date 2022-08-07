@@ -1,3 +1,4 @@
+import CopyAllOutlined from "@mui/icons-material/CopyAllOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Alert from "@mui/material/Alert";
@@ -13,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Paper from "@mui/material/Paper";
 import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
+import Snackbar from "@mui/material/Snackbar";
 import { useState } from "react";
 
 import { trpc } from "../utils/trpc";
@@ -66,6 +67,7 @@ const initialValues = {
 function ShareForm() {
   const [values, setValues] = useState<State>(initialValues);
   const [error, setError] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const sharePassword = trpc.useMutation(["password.post"]);
 
@@ -81,6 +83,14 @@ function ShareForm() {
       ...values,
       showPassword: !values.showPassword,
     });
+  };
+
+  const handleClickCopyLink = () => {
+    if (!sharePassword.data) return;
+    setOpen(true);
+    navigator.clipboard.writeText(
+      `${process.env.NEXT_PUBLIC_URL}/share/${sharePassword.data.data}`,
+    );
   };
 
   const handleMouseDownPassword = (
@@ -200,19 +210,40 @@ function ShareForm() {
         </Box>
       ) : null}
       {sharePassword.data ? (
-        <FormControl fullWidth margin="normal">
-          <TextField
-            onFocus={(event) => {
-              event.target.select();
-            }}
-            value={`${process.env.NEXT_PUBLIC_URL}/share/${sharePassword.data.data}`}
-            fullWidth
-            type="text"
-            label="Link to share"
-            id="link-to-share"
-            aria-readonly
+        <>
+          <FormControl fullWidth margin="normal">
+            <InputLabel htmlFor="link-to-share">Link to share</InputLabel>
+            <OutlinedInput
+              onFocus={(event) => {
+                event.target.select();
+              }}
+              value={`${process.env.NEXT_PUBLIC_URL}/share/${sharePassword.data.data}`}
+              fullWidth
+              type="text"
+              label="Link to share"
+              id="link-to-share"
+              aria-readonly
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="copy link"
+                    onClick={handleClickCopyLink}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    <CopyAllOutlined />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <Snackbar
+            open={open}
+            onClose={() => setOpen(false)}
+            autoHideDuration={3000}
+            message="Copied to clipboard"
           />
-        </FormControl>
+        </>
       ) : null}
     </Container>
   );
