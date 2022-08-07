@@ -31,10 +31,12 @@ function ReceiveForm({ sharedId = "" }) {
   });
   const [showResponse, setShowResponse] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleChange =
     (prop: keyof State) =>
     ({ target: { value } }: { target: { value: string } }) => {
+      if (error) setError(false);
       setValues({ ...values, [prop]: value });
     };
 
@@ -53,7 +55,10 @@ function ReceiveForm({ sharedId = "" }) {
 
   const onSubmit = () => {
     const { id, password } = values;
-    if (!id) return;
+    if (!id) {
+      setError(true);
+      return;
+    }
     setSubmitValues({ id, password });
     setShowResponse(true);
   };
@@ -81,6 +86,7 @@ function ReceiveForm({ sharedId = "" }) {
           type="text"
           label="Shared id"
           id="shared-id"
+          error={error}
         />
       </FormControl>
       <FormControl fullWidth margin="normal">
