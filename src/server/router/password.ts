@@ -35,7 +35,7 @@ export const passwordRouter = createRouter()
         process.env.SECRET_KEY!,
       ).toString();
 
-      const salt = await bcrypt.genSalt(10);
+      const salt = await bcrypt.genSalt(15);
       const hash = openWithPassword
         ? await bcrypt.hash(openWithPassword, salt)
         : undefined;
