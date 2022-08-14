@@ -10,8 +10,8 @@ export default async function handler(
       const { authorization } = req.headers;
 
       if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
-        await cleanupPasswords();
-        res.status(200).json({ success: true });
+        const { deleted } = await cleanupPasswords();
+        res.status(200).json({ success: true, deleted });
       } else {
         res.status(401).json({ success: false });
       }

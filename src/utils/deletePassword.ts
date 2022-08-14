@@ -9,5 +9,5 @@ export const cleanupPasswords = async () => {
   const response = await prisma.passwordToShare.deleteMany({
     where: { destroyAt: { lte: new Date() } },
   });
-  return response;
+  return { deleted: response.count };
 };
