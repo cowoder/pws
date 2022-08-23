@@ -8,11 +8,11 @@ import { prisma } from "../db/client";
 import { createRouter } from "./context";
 import { deletePassword } from "../../utils/deletePassword";
 
-export const decryptPassword = (encryptedPassword: string) => {
-  const bytes = CryptoJS.AES.decrypt(
-    encryptedPassword,
-    process.env.SECRET_KEY!,
-  );
+export const decryptPassword = (
+  encryptedPassword: string,
+  key = process.env.SECRET_KEY!,
+) => {
+  const bytes = CryptoJS.AES.decrypt(encryptedPassword, key);
   const password = bytes.toString(CryptoJS.enc.Utf8);
   return password;
 };
@@ -32,7 +32,7 @@ export const passwordRouter = createRouter()
 
       const encryptedShared = CryptoJS.AES.encrypt(
         sharedPassword,
-        process.env.SECRET_KEY!,
+        openWithPassword || process.env.SECRET_KEY!,
       ).toString();
 
       const salt = await bcrypt.genSalt(15);
@@ -83,7 +83,7 @@ export const passwordRouter = createRouter()
         });
       else {
         await deletePassword(input.id);
-        return decryptPassword(sharedPassword);
+        return decryptPassword(sharedPassword, input.password);
       }
     },
   });
