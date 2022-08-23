@@ -32,7 +32,12 @@ export const passwordRouter = createRouter()
 
       const encryptedShared = CryptoJS.AES.encrypt(
         sharedPassword,
-        openWithPassword || process.env.SECRET_KEY!,
+        openWithPassword
+          ? Buffer.from(
+              openWithPassword + process.env.SECRET_KEY!,
+              "utf-8",
+            ).toString()
+          : process.env.SECRET_KEY!,
       ).toString();
 
       const salt = await bcrypt.genSalt(15);
@@ -83,7 +88,13 @@ export const passwordRouter = createRouter()
         });
       else {
         await deletePassword(input.id);
-        return decryptPassword(sharedPassword, input.password);
+        return decryptPassword(
+          sharedPassword,
+          Buffer.from(
+            input.password + process.env.SECRET_KEY!,
+            "utf-8",
+          ).toString(),
+        );
       }
     },
   });
