@@ -3,6 +3,7 @@ import Container from "@mui/material/Container";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Head from "next/head";
 
 import ReceiveForm from "../../components/ReceiveForm";
 import { prisma } from "../../server/db/client";
@@ -17,39 +18,48 @@ const Shared: React.FC<{
   requirePassword: boolean;
 }> = ({ shareId, sharedPassword, requirePassword }) => {
   return (
-    <Container>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {requirePassword ? (
-          <>
-            <Typography variant="h6" component="h2" gutterBottom>
-              Going to need a password to access that one
-            </Typography>
-            <ReceiveForm sharedId={shareId} />
-          </>
-        ) : (
-          <FormControl fullWidth margin="normal">
-            <TextField
-              onFocus={(event) => {
-                event.target.select();
-              }}
-              value={sharedPassword}
-              fullWidth
-              type="text"
-              label="Shared password"
-              id="shared-password"
-              aria-readonly
-            />
-          </FormControl>
-        )}
-      </Box>
-    </Container>
+    <>
+      <Head>
+        <title>PWS - Password Share</title>
+        <meta
+          name="description"
+          content="PWS - Password Share - open to access your shared password"
+        />
+      </Head>
+      <Container>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {requirePassword ? (
+            <>
+              <Typography variant="h6" component="h2" gutterBottom>
+                Going to need a password to access that one
+              </Typography>
+              <ReceiveForm sharedId={shareId} />
+            </>
+          ) : (
+            <FormControl fullWidth margin="normal">
+              <TextField
+                onFocus={(event) => {
+                  event.target.select();
+                }}
+                value={sharedPassword}
+                fullWidth
+                type="text"
+                label="Shared password"
+                id="shared-password"
+                aria-readonly
+              />
+            </FormControl>
+          )}
+        </Box>
+      </Container>
+    </>
   );
 };
 
