@@ -8,7 +8,7 @@ function Header() {
   return (
     <AppBar position="static" sx={{ my: 4 }}>
       <Toolbar>
-        <NextLink href="/">
+        <NextLink href="/" style={{ textDecoration: "none" }}>
           <Typography
             variant="h5"
             component="h1"
