@@ -23,7 +23,7 @@
     "bcryptjs": "^2.4.3",
     "crypto-js": "^4.2.0",
     "nanoid": "^5.1.5",
-    "next": "14.2.32",
+    "next": "14.2.35",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.2",
